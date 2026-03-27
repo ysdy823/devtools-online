@@ -2,6 +2,8 @@
 
 A free, open-source developer toolkit that provides essential everyday utilities right in your browser. Built with Python Flask, DevTools Online offers a clean, fast interface for common encoding, decoding, formatting, and conversion tasks — no sign-up required.
 
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/PremiumSupportHub)
+
 ## Features
 
 - **Entirely browser-based** — works offline after initial load
@@ -42,3 +44,7 @@ The application starts on **http://localhost:9001**.
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+**Like this project?** [Buy me a coffee](https://buymeacoffee.com/PremiumSupportHub) to support continued development!
