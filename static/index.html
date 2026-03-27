@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevTools.run — Free Developer Toolkit</title>
+<meta name="description" content="Free online developer tools: JSON formatter, Base64 encoder, JWT decoder, hash generator, regex tester, UUID generator, and more.">
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--accent2:#3fb950;--red:#f85149;--font:'SF Mono',SFMono-Regular,Consolas,'Liberation Mono',Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.5}
+.container{max-width:960px;margin:0 auto;padding:16px}
+header{text-align:center;padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px}
+h1{font-size:28px;font-weight:700;margin-bottom:4px}
+h1 span{color:var(--accent)}
+.subtitle{color:var(--muted);font-size:14px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;justify-content:center}
+.tab{padding:6px 14px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:13px;transition:all .15s}
+.tab:hover{color:var(--text);border-color:var(--accent)}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px}
+.card h2{font-size:18px;margin-bottom:12px;color:var(--accent)}
+textarea,.input-field{width:100%;min-height:120px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:var(--font);font-size:13px;resize:vertical;outline:none}
+textarea:focus,.input-field:focus{border-color:var(--accent)}
+.input-field{min-height:auto;height:40px}
+.input-row{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.input-row label{color:var(--muted);font-size:13px;min-width:60px}
+.btn{padding:8px 16px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:13px;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{opacity:.9}
+.btn-group{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:var(--font);font-size:13px;white-space:pre-wrap;word-break:break-all;min-height:60px;max-height:400px;overflow:auto;margin-top:12px}
+.output.valid{border-color:var(--accent2)}
+.output.invalid{border-color:var(--red)}
+.status{font-size:12px;color:var(--muted);margin-top:8px}
+.status.ok{color:var(--accent2)}
+.status.err{color:var(--red)}
+select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:13px;outline:none}
+.match{background:rgba(88,166,255,0.2);border-radius:2px;padding:1px 2px}
+footer{text-align:center;padding:32px 0 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:32px}
+footer a{color:var(--accent);text-decoration:none}
+@media(max-width:600px){.container{padding:10px}.tabs{gap:4px}.tab{padding:4px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1><span>&lt;/&gt;</span> DevTools<span>.run</span></h1>
+<p class="subtitle">Free developer utilities — no signup, no tracking, runs in your browser + lightweight API</p>
+</header>
+
+<div class="tabs">
+<div class="tab active" data-panel="json">JSON</div>
+<div class="tab" data-panel="base64">Base64</div>
+<div class="tab" data-panel="jwt">JWT</div>
+<div class="tab" data-panel="hash">Hash</div>
+<div class="tab" data-panel="uuid">UUID</div>
+<div class="tab" data-panel="regex">Regex</div>
+<div class="tab" data-panel="url">URL Encode</div>
+<div class="tab" data-panel="timestamp">Timestamp</div>
+<div class="tab" data-panel="diff">Diff</div>
+</div>
+
+<!-- JSON -->
+<div class="panel active" id="json">
+<div class="card">
+<h2>JSON Formatter & Validator</h2>
+<textarea id="json-input" placeholder='Paste JSON here... e.g. {"key":"value","arr":[1,2,3]}'></textarea>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="jsonFormat()">Format</button>
+<button class="btn" onclick="jsonMinify()">Minify</button>
+<button class="btn" onclick="copyOutput('json-output')">Copy</button>
+</div>
+<div id="json-output" class="output"></div>
+<div id="json-status" class="status"></div>
+</div>
+</div>
+
+<!-- Base64 -->
+<div class="panel" id="base64">
+<div class="card">
+<h2>Base64 Encode / Decode</h2>
+<textarea id="b64-input" placeholder="Enter text to encode or Base64 string to decode..."></textarea>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="b64Encode()">Encode</button>
+<button class="btn btn-primary" onclick="b64Decode()">Decode</button>
+<button class="btn" onclick="copyOutput('b64-output')">Copy</button>
+</div>
+<div id="b64-output" class="output"></div>
+</div>
+</div>
+
+<!-- JWT -->
+<div class="panel" id="jwt">
+<div class="card">
+<h2>JWT Decoder</h2>
+<textarea id="jwt-input" placeholder="Paste a JWT token here..."></textarea>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="jwtDecode()">Decode</button>
+<button class="btn" onclick="copyOutput('jwt-output')">Copy</button>
+</div>
+<div id="jwt-output" class="output"></div>
+</div>
+</div>
+
+<!-- Hash -->
+<div class="panel" id="hash">
+<div class="card">
+<h2>Hash Generator</h2>
+<textarea id="hash-input" placeholder="Enter text to hash..."></textarea>
+<div class="input-row">
+<label>Algorithm:</label>
+<select id="hash-algo">
+<option value="md5">MD5</option>
+<option value="sha1">SHA-1</option>
+<option value="sha256" selected>SHA-256</option>
+<option value="sha512">SHA-512</option>
+</select>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="hashGen()">Generate Hash</button>
+<button class="btn" onclick="hashAll()">All Algorithms</button>
+<button class="btn" onclick="copyOutput('hash-output')">Copy</button>
+</div>
+<div id="hash-output" class="output"></div>
+</div>
+</div>
+
+<!-- UUID -->
+<div class="panel" id="uuid">
+<div class="card">
+<h2>UUID Generator</h2>
+<div class="input-row">
+<label>Count:</label>
+<input type="number" id="uuid-count" class="input-field" value="1" min="1" max="100" style="width:80px">
+<label>Version:</label>
+<select id="uuid-version"><option value="4" selected>v4 (random)</option><option value="1">v1 (time)</option></select>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="uuidGen()">Generate</button>
+<button class="btn" onclick="copyOutput('uuid-output')">Copy</button>
+</div>
+<div id="uuid-output" class="output"></div>
+</div>
+</div>
+
+<!-- Regex -->
+<div class="panel" id="regex">
+<div class="card">
+<h2>Regex Tester</h2>
+<div class="input-row">
+<label>Pattern:</label>
+<input type="text" id="regex-pattern" class="input-field" placeholder="Enter regex pattern..." style="flex:1">
+<input type="text" id="regex-flags" class="input-field" placeholder="flags" value="g" style="width:60px">
+</div>
+<textarea id="regex-input" placeholder="Enter test string..."></textarea>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="regexTest()">Test</button>
+</div>
+<div id="regex-output" class="output"></div>
+<div id="regex-status" class="status"></div>
+</div>
+</div>
+
+<!-- URL Encode -->
+<div class="panel" id="url">
+<div class="card">
+<h2>URL Encode / Decode</h2>
+<textarea id="url-input" placeholder="Enter text or URL-encoded string..."></textarea>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="urlEncode()">Encode</button>
+<button class="btn btn-primary" onclick="urlDecode()">Decode</button>
+<button class="btn" onclick="copyOutput('url-output')">Copy</button>
+</div>
+<div id="url-output" class="output"></div>
+</div>
+</div>
+
+<!-- Timestamp -->
+<div class="panel" id="timestamp">
+<div class="card">
+<h2>Unix Timestamp Converter</h2>
+<div class="input-row">
+<input type="text" id="ts-input" class="input-field" placeholder="Enter Unix timestamp (seconds or milliseconds)..." style="flex:1">
+<button class="btn" onclick="tsNow()">Now</button>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="tsConvert()">Convert</button>
+<button class="btn" onclick="copyOutput('ts-output')">Copy</button>
+</div>
+<div id="ts-output" class="output"></div>
+</div>
+</div>
+
+<!-- Diff -->
+<div class="panel" id="diff">
+<div class="card">
+<h2>Text Diff</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div>
+<label style="color:var(--muted);font-size:13px;margin-bottom:4px;display:block">Original</label>
+<textarea id="diff-input1" placeholder="Original text..." style="min-height:150px"></textarea>
+</div>
+<div>
+<label style="color:var(--muted);font-size:13px;margin-bottom:4px;display:block">Modified</label>
+<textarea id="diff-input2" placeholder="Modified text..." style="min-height:150px"></textarea>
+</div>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="diffCompare()">Compare</button>
+<button class="btn" onclick="copyOutput('diff-output')">Copy</button>
+</div>
+<div id="diff-output" class="output"></div>
+</div>
+</div>
+
+<footer>
+<a href="https://buymeacoffee.com/PremiumSupportHub" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:linear-gradient(135deg,#ff813f,#ffdd00);color:#1a1a2e;font-weight:600;font-size:14px;border-radius:8px;text-decoration:none;margin-bottom:16px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 8px rgba(255,129,63,0.3)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(255,129,63,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(255,129,63,0.3)'">☕ Support this project</a>
+<p style="margin-top:12px">Built with Python + vanilla JS — no frameworks, no tracking, no cookies</p>
+</footer>
+</div>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.panel).classList.add('active');
+  });
+});
+
+async function api(path, body) {
+  const r = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
+}
+
+function copyOutput(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent);
+}
+
+// JSON
+async function jsonFormat() {
+  const d = await api('/api/json/format', {input: document.getElementById('json-input').value, indent: 2, sort_keys: false});
+  const out = document.getElementById('json-output');
+  const st = document.getElementById('json-status');
+  out.textContent = d.result;
+  out.className = 'output ' + (d.valid ? 'valid' : 'invalid');
+  st.textContent = d.valid ? '✓ Valid JSON' : '✗ Invalid JSON';
+  st.className = 'status ' + (d.valid ? 'ok' : 'err');
+}
+async function jsonMinify() {
+  const d = await api('/api/json/minify', {input: document.getElementById('json-input').value});
+  const out = document.getElementById('json-output');
+  out.textContent = d.result;
+  out.className = 'output ' + (d.valid ? 'valid' : 'invalid');
+}
+
+// Base64
+async function b64Encode() {
+  const d = await api('/api/base64/encode', {input: document.getElementById('b64-input').value});
+  document.getElementById('b64-output').textContent = d.result;
+}
+async function b64Decode() {
+  const d = await api('/api/base64/decode', {input: document.getElementById('b64-input').value});
+  document.getElementById('b64-output').textContent = d.result;
+}
+
+// JWT
+async function jwtDecode() {
+  const d = await api('/api/jwt/decode', {input: document.getElementById('jwt-input').value});
+  document.getElementById('jwt-output').textContent = JSON.stringify(d, null, 2);
+}
+
+// Hash
+async function hashGen() {
+  const d = await api('/api/hash', {input: document.getElementById('hash-input').value, algorithm: document.getElementById('hash-algo').value});
+  document.getElementById('hash-output').textContent = d.result;
+}
+async function hashAll() {
+  const input = document.getElementById('hash-input').value;
+  const algos = ['md5','sha1','sha256','sha512'];
+  const results = await Promise.all(algos.map(a => api('/api/hash', {input, algorithm: a})));
+  let out = '';
+  algos.forEach((a, i) => { out += a.toUpperCase().padEnd(8) + ': ' + results[i].result + '\n'; });
+  document.getElementById('hash-output').textContent = out;
+}
+
+// UUID
+async function uuidGen() {
+  const count = document.getElementById('uuid-count').value;
+  const version = document.getElementById('uuid-version').value;
+  const r = await fetch(`/api/uuid?count=${count}&version=${version}`);
+  const d = await r.json();
+  document.getElementById('uuid-output').textContent = d.result.join('\n');
+}
+
+// Regex
+async function regexTest() {
+  const d = await api('/api/regex/test', {
+    pattern: document.getElementById('regex-pattern').value,
+    input: document.getElementById('regex-input').value,
+    flags: document.getElementById('regex-flags').value
+  });
+  const out = document.getElementById('regex-output');
+  const st = document.getElementById('regex-status');
+  if (d.valid) {
+    let text = `Found ${d.count} match(es):\n\n`;
+    d.matches.forEach((m, i) => {
+      text += `Match ${i+1}: "${m.match}" (pos ${m.start}-${m.end})`;
+      if (m.groups.length) text += `  groups: [${m.groups.join(', ')}]`;
+      text += '\n';
+    });
+    out.textContent = text;
+    st.textContent = `${d.count} match(es) found`;
+    st.className = 'status ok';
+  } else {
+    out.textContent = d.error;
+    st.textContent = 'Invalid regex';
+    st.className = 'status err';
+  }
+}
+
+// URL
+async function urlEncode() {
+  const d = await api('/api/url/encode', {input: document.getElementById('url-input').value});
+  document.getElementById('url-output').textContent = d.result;
+}
+async function urlDecode() {
+  const d = await api('/api/url/decode', {input: document.getElementById('url-input').value});
+  document.getElementById('url-output').textContent = d.result;
+}
+
+// Timestamp
+function tsNow() { document.getElementById('ts-input').value = Math.floor(Date.now()/1000); }
+async function tsConvert() {
+  const d = await api('/api/timestamp', {input: document.getElementById('ts-input').value});
+  if (d.error) {
+    document.getElementById('ts-output').textContent = 'Error: ' + d.error;
+  } else {
+    document.getElementById('ts-output').textContent = `UTC:     ${d.utc}\nISO:     ${d.iso}\nUnix:    ${d.unix}\nUnix ms: ${d.unix_ms}`;
+  }
+}
+
+// Diff
+async function diffCompare() {
+  const d = await api('/api/diff', {
+    text1: document.getElementById('diff-input1').value,
+    text2: document.getElementById('diff-input2').value
+  });
+  document.getElementById('diff-output').textContent = d.result || 'No differences found.';
+}
+</script>
+</body>
+</html>
